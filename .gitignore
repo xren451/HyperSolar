@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.pt
+*.pth
+*.npz
+*.npy
+*.nc
+*.h5
+*.hdf5
+results/
+cache/
+smoke/

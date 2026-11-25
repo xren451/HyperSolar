@@ -1,0 +1,166 @@
+{
+  "CN-Solar": {
+    "dataset": "CN-Solar",
+    "site": "grid_0866",
+    "node": 866,
+    "coordinates_lat_lon": [
+      35.25872802734375,
+      109.74031829833984
+    ],
+    "origin": 7947,
+    "origin_utc": "2021-11-28T03:00:00Z",
+    "selection": "truth-only maximum24h departure from clear-sky hourly changes, among all24h common-valid and>=6hours truth>100W/m2; not prediction-performance selection",
+    "target": "Archive grid-cell irradiance (not station GHI)",
+    "smf_model": "SMF V2 grid ensemble mean",
+    "v9_available": false,
+    "model_source": "/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105/results/CN-Solar/SMF_V2_seed42/test_predictions.npz",
+    "baseline_sources": [
+      {
+        "method": "Persistence",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/CN-Solar/Persistence/region_00",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "Clear-sky",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/CN-Solar/Clear-sky/region_00",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "SolarFormer",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/CN-Solar/SolarFormer/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "SolarSeer",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/CN-Solar/SolarSeer/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "GraphCast",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/CN-Solar/GraphCast/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      }
+    ],
+    "daylight_hours": 6,
+    "selected_index": 502
+  },
+  "SolarCube": {
+    "dataset": "SolarCube",
+    "site": "LRC",
+    "region": 9,
+    "origin": 8087,
+    "origin_utc": "2018-12-03T23:00:00Z",
+    "selection": "previous retrospectively selected ramp-shape advantage case; original predictions",
+    "target": "Measured station GHI",
+    "smf_model": "V9-RAMP-HYPER raw deterministic",
+    "v9_available": true,
+    "source": "/mnt/wangyishan_share/wangdongdong/smf_point_ramp_shape_visuals_20261111/hourly_curves.csv"
+  },
+  "NSRDB": {
+    "dataset": "NSRDB",
+    "site": "Copper Mountain",
+    "node": 0,
+    "coordinates_lat_lon": [
+      35.93000030517578,
+      -115.0199966430664
+    ],
+    "origin": 8493,
+    "origin_utc": "2018-12-20T21:30:00Z",
+    "selection": "truth-only maximum24h departure from clear-sky hourly changes, among all24h common-valid and>=6hours truth>100W/m2; not prediction-performance selection",
+    "target": "NSRDB resource-point GHI",
+    "smf_model": "SMF V6 ensemble mean",
+    "v9_available": false,
+    "model_source": "/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105/results/NSRDB/SMF_V6_clear_sky_gate_seed42/test_predictions.npz",
+    "baseline_sources": [
+      {
+        "method": "Persistence",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/NSRDB/Persistence/region_00",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "Clear-sky",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/NSRDB/Clear-sky/region_00",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "SolarFormer",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/NSRDB/SolarFormer/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "SolarSeer",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/NSRDB/SolarSeer/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "GraphCast",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/NSRDB/GraphCast/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      }
+    ],
+    "daylight_hours": 8,
+    "selected_index": 1048,
+    "archive_origin_utc_before_geometry_audit": "2018-12-21T05:00:00Z",
+    "timestamp_correction_hours": -7.5
+  },
+  "SolarAlabama": {
+    "dataset": "SolarAlabama",
+    "site": "30.45_-88.25_UPV_70MW",
+    "node": 0,
+    "coordinates_lat_lon": [
+      30.450000762939453,
+      -88.25
+    ],
+    "origin": 7648,
+    "origin_utc": "2006-11-15T16:00:00Z",
+    "selection": "truth-only maximum24h departure from clear-sky hourly changes, among all24h common-valid and>=6hours truth>100W/m2; not prediction-performance selection",
+    "target": "CERES irradiance proxy (not station GHI)",
+    "smf_model": "SMF V6 ensemble mean",
+    "v9_available": false,
+    "model_source": "/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105/results/SolarAlabama/SMF_V6_clear_sky_gate_seed42/test_predictions.npz",
+    "baseline_sources": [
+      {
+        "method": "Persistence",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/SolarAlabama/Persistence/region_00",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "Clear-sky",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/SolarAlabama/Clear-sky/region_00",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "SolarFormer",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/SolarAlabama/SolarFormer/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "SolarSeer",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/SolarAlabama/SolarSeer/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      },
+      {
+        "method": "GraphCast",
+        "path": "/mnt/wangyishan_share/wangdongdong/smf_baseline_matrix_20261106/results/SolarAlabama/GraphCast/test_predictions.npz",
+        "aligned_origins": true,
+        "matching_truth": true
+      }
+    ],
+    "daylight_hours": 6,
+    "selected_index": 203
+  }
+}
