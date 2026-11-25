@@ -1,8 +1,8 @@
 import os, pathlib, subprocess, time, json, datetime
-RUN=pathlib.Path("/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105/results/SolarCube/V9_RampHG_Grid128_seed42_GPU4_full19_native120eval")
-PLOT=pathlib.Path("/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105/code/v9_ramp_hg128_20261110/plot_smf_results_9x24.py")
-PYTHON="/home/wangdongdong/miniconda3/envs/geo/bin/python"
-PID=2495722
+RUN=pathlib.Path(os.environ["HYPERSOLAR_RUN_DIR"])
+PLOT=pathlib.Path(__file__).with_name("plot_smf_results_9x24.py")
+PYTHON=os.environ.get("PYTHON", "python")
+PID=int(os.environ["HYPERSOLAR_TRAIN_PID"])
 LOG=RUN/"plot_watcher.log"
 def log(event, **kwargs):
     line=json.dumps({"time":datetime.datetime.now().astimezone().isoformat(timespec="seconds"),"event":event,**kwargs})+"\n"

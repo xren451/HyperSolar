@@ -6,6 +6,7 @@ an auxiliary panel displays the model's 128x128 mesh beside truth upsampled
 for visual alignment only.
 """
 from pathlib import Path
+import os
 import csv
 import json
 import numpy as np
@@ -14,11 +15,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import torch
 
-BASE = Path("/mnt/wangyishan_share/wangdongdong")
-REG = BASE / "smf_registry_variants_20261105"
-NATIVE = BASE / "smf_native120_20261109"
-RUN = REG / "results/SolarCube/V9_RampHG_Grid128_seed42_GPU4_full19_native120eval"
-CASES = BASE / "smf_forecast120_24h_20261110"
+BASE = Path(os.environ.get("HYPERSOLAR_DATA_DIR", "data"))
+REG = Path(os.environ.get("HYPERSOLAR_REGISTRY_DATA", BASE))
+NATIVE = Path(os.environ["HYPERSOLAR_NATIVE120_DATA"])
+RUN = Path(os.environ["HYPERSOLAR_RUN_DIR"])
+CASES = Path(os.environ.get("HYPERSOLAR_CASES_DIR", "cases"))
 OUT = RUN / "figures_9x24"
 OUT.mkdir(parents=True, exist_ok=True)
 
@@ -29,13 +30,13 @@ sys.path[:0] = sys_path
 from native_data import NativeWindows
 
 dataset_args = (
-    str(REG / "data/SolarCube_2018_full19_hourly"),
-    "/mnt/wangyishare/wangdongdong/smf_full_20261025/solarcube/prepared",
-    "/mnt/wangyishare/paper_solar_datasets/solarcube/raw/SolarCube_sitelist.csv",
-    str(REG / "data/SolarCube_2018_era5_8x8_v7"),
+    str(REG / "SolarCube_2018_full19_hourly"),
+    os.environ["HYPERSOLAR_SOLARCUBE_PREPARED"],
+    os.environ["HYPERSOLAR_SOLARCUBE_SITELIST"],
+    str(REG / "SolarCube_2018_era5_8x8_v7"),
     "test",
 )
-ds = NativeWindows(*dataset_args, stride=3, native=str(BASE / "smf_native120_20261109"))
+ds = NativeWindows(*dataset_args, stride=3, native=str(NATIVE))
 row_to_idx = {tuple(map(int, row)): i for i, row in enumerate(ds.rows)}
 
 METHODS = [

@@ -105,7 +105,7 @@ def main():
     model = V9RampHyperedgeCSI().cuda()
     initialization = 'random seed42, trained from scratch'
     if a.dataset == 'SolarCube' and not a.smoke:
-        archived = Path('/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105/results/SolarCube/V9_RampHyperedge_CSI_full19_seed42_GPU2_retry1/best.pt')
+        archived = Path(os.environ['HYPERSOLAR_SOLARCUBE_WARMSTART'])
         state = torch.load(archived, map_location='cpu', weights_only=True)
         missing, unexpected = model.load_state_dict(state, strict=False)
         assert not unexpected

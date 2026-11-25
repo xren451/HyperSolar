@@ -4,7 +4,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch.utils.checkpoint import checkpoint
 HERE=pathlib.Path(__file__).parent
-REG=pathlib.Path('/mnt/wangyishan_share/wangdongdong/smf_registry_variants_20261105')
+REG=pathlib.Path(os.environ['HYPERSOLAR_REGISTRY_DATA']).expanduser()
 sys.path.insert(0,str(REG));sys.path.insert(0,str(HERE))
 from native_data import NativeWindows
 from v9_ramp_hg128_model import V9RampHyperedgeCSI
@@ -16,8 +16,8 @@ def main():
  torch.set_num_threads(4)
  cfg=dict(version='V9-RampHG-Grid128-native120-supervision',model_grid=[128,128],label_grid=[120,120],spatial_preprocessing_downsampling=False,history=72,horizon=24,stride=3,seed=42,all_regions=19,split='chronological70/15/15',epochs=60,patience=8,batch=4,lr=1e-4,local_hyperedges='128-grid sparse hypergraph; 32x32 local patches; targets/metrics aggregated to native120',encoder='V5 ResNet-Swin-ViT encoder at128; 120 native inputs bilinear-resampled; 64x64 latent grid; 128 future field queries; native120 labels',normalization='reuse earlier training-only input statistics, no validation/test fitting',diffusion='joint native14400 field nodes plus one point, eight diffusion steps',precision='float32; checkpoint raster frames in groups of2',source_hashes={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in HERE.glob('*.py')})
  (out/'config.json').write_text(json.dumps(cfg,indent=2));record(dict(event='initializing',gpu=torch.cuda.get_device_name()))
- args=(str(REG/'data/SolarCube_2018_full19_hourly'),'/mnt/wangyishan_share/wangdongdong/smf_full_20261025/solarcube/prepared','/mnt/wangyishan_share/paper_solar_datasets/solarcube/raw/SolarCube_sitelist.csv',str(REG/'data/SolarCube_2018_era5_8x8_v7'))
- ds={s:NativeWindows(*args,s,stride=3,native='/mnt/wangyishan_share/wangdongdong/smf_native120_20261109') for s in ['train','val','test']}
+ args=(str(REG/'SolarCube_2018_full19_hourly'),os.environ['HYPERSOLAR_SOLARCUBE_PREPARED'],os.environ['HYPERSOLAR_SOLARCUBE_SITELIST'],str(REG/'SolarCube_2018_era5_8x8_v7'))
+ ds={s:NativeWindows(*args,s,stride=3,native=os.environ['HYPERSOLAR_NATIVE120_DATA']) for s in ['train','val','test']}
  dl={s:DataLoader(d,batch_size=4,shuffle=s=='train',num_workers=0) for s,d in ds.items()}
  model=V9RampHyperedgeCSI().cuda();encoder=model.base.encoder;original=encoder.forward
  def chunked(x):

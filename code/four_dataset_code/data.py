@@ -5,29 +5,29 @@ contains the mean of observed source nodes assigned to it, not interpolated
 ground truth. Future Haurwitz geometry is calculated from time/coordinates.
 """
 from pathlib import Path
+import os
 import json
 import sys
 import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-B = Path('/mnt/wangyishan_share/wangdongdong')
-R = B / 'smf_registry_variants_20261105'
-ROOT = B / 'smf_v9_four_datasets_20261111'
+B = Path(os.environ.get('HYPERSOLAR_DATA_DIR', 'data')).expanduser()
+ROOT = Path(os.environ.get('HYPERSOLAR_CACHE_DIR', 'cache')).expanduser()
 SPECS = {
     'CN-Solar': {
-        'source': B / 'smf_utc_corrected_20261103/full_year_CN-SOLAR_20261103/data/CN-SOLAR_2021_full_common64_hourly.npz',
+        'source': Path(os.environ.get('HYPERSOLAR_CNSOLAR_ARCHIVE', B/'CN-SOLAR_2021_full_common64_hourly.npz')),
         'point': 866, 'radiative': ['Ch07', 'Ch08', 'SW_gbl'],
         'met': ['t2m', 'd2m', 'sp', 'u10', 'v10', 'u100', 'v100'],
         'target': 'archive grid-cell irradiance; not measured station GHI'},
     'NSRDB': {
-        'source': R / 'data/NSRDB_2018_irradiance_fieldpoint.npz',
+        'source': Path(os.environ.get('HYPERSOLAR_NSRDB_ARCHIVE', B/'NSRDB_2018_irradiance_fieldpoint.npz')),
         'point': 0,
         'radiative': ['GHI', 'DNI', 'DHI', 'SolarZenith_deg', 'CloudType_code', 'ClearskyGHI'],
         'met': ['Temperature_C', 'RH_pct'],
         'target': 'NSRDB GHI resource product at sampled coordinates'},
     'SolarAlabama': {
-        'source': R / 'data/SolarAlabama_2006_irradiance_fieldpoint.npz',
+        'source': Path(os.environ.get('HYPERSOLAR_SOLARALABAMA_ARCHIVE', B/'SolarAlabama_2006_irradiance_fieldpoint.npz')),
         'point': 0, 'radiative': ['CERES_all_sky_Wm2', 'CERES_clear_sky_Wm2'],
         'met': ['t2m', 'd2m', 'sp', 'u10', 'v10', 'u100', 'v100'],
         'target': 'CERES product proxy irradiance; not ground GHI or plant power'},
@@ -48,7 +48,6 @@ def _prepare(dataset):
         return prepare_cube_geometry()
     from scipy.sparse import csr_matrix
     import pandas as pd
-    sys.path.insert(0, '/tmp/smf_pvlib_20261110')
     import pvlib
     out = ROOT / 'cache' / dataset
     if (out / 'READY.json').exists():
@@ -237,11 +236,11 @@ def prepare_cube_geometry():
     """Known UTC/site geometry, independent of future satellite missingness."""
     import csv
     import pandas as pd
-    sys.path.insert(0, '/tmp/smf_pvlib_20261110')
     import pvlib
     out = ROOT/'cache'/'SolarCube'
     out.mkdir(parents=True, exist_ok=True)
-    sites = list(csv.DictReader(open('/mnt/wangyishan_share/paper_solar_datasets/solarcube/raw/SolarCube_sitelist.csv')))
+    site_list = Path(os.environ.get('HYPERSOLAR_SOLARCUBE_SITELIST', B/'SolarCube_sitelist.csv'))
+    sites = list(csv.DictReader(open(site_list)))
     times = pd.date_range('2018-01-01', periods=8760, freq='h', tz='UTC')
     for site in sites:
         r = int(site['tile_id'])
@@ -272,13 +271,13 @@ class CubeWindows(Dataset):
         from train_solarcube_v7_fieldpoint_csi import SolarCubeWindows
         self.base = SolarCubeWindows(
             R/'data/SolarCube_2018_full19_hourly', B/'smf_full_20261025/solarcube/prepared',
-            '/mnt/wangyishan_share/paper_solar_datasets/solarcube/raw/SolarCube_sitelist.csv',
+            str(site_list),
             R/'data/SolarCube_2018_era5_8x8_v7', split, stride=3)
         self.rows = self.base.rows
         self.path = ROOT/'cache'/'SolarCube'
         self.geometry = {r: np.load(self.path/f'clear_region{r:02d}.npy', mmap_mode='r') for r in range(1, 20)}
         self.times = np.arange(np.datetime64('2018-01-01T00:00:00'), np.datetime64('2019-01-01T00:00:00'), np.timedelta64(1, 'h'))
-        self.sites = {int(v['tile_id']): v for v in csv.DictReader(open('/mnt/wangyishan_share/paper_solar_datasets/solarcube/raw/SolarCube_sitelist.csv'))}
+        self.sites = {int(v['tile_id']): v for v in csv.DictReader(open(site_list))}
         self.info = dict(dataset='SolarCube', target='actual station GHI and source SSR16 raster',
                          cuts=self.base.cuts, stat_fit_end_exclusive=self.base.cuts[1],
                          source='original full19 SolarCubeWindows; new known-geometry decoding',

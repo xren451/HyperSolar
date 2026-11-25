@@ -12,7 +12,7 @@ p.add_argument('--gpu', required=True)
 p.add_argument('--datasets', nargs='+', required=True)
 p.add_argument('--batch', type=int, default=8)
 a = p.parse_args()
-root = Path('/mnt/wangyishan_share/wangdongdong/smf_v9_four_datasets_20261111')
+root = Path(os.environ.get('HYPERSOLAR_CACHE_DIR', 'cache')).expanduser()
 env = dict(os.environ, CUDA_VISIBLE_DEVICES=a.gpu, PYTHONUNBUFFERED='1', OMP_NUM_THREADS='4')
 for dataset in a.datasets:
     path = root/'queue'/f'{dataset}.json'
